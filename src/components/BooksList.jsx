@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {produce} from 'immer';
 import "./BooksList.css";
 import BooksListItem from "./BooksListItem";
 
@@ -29,12 +30,26 @@ const BooksList = () => {
   const [books, setBooks] = useState(initialBooks);
   function handleRate(id, rating) {
     setBooks((prevState) => {
-      return prevState.map((book) => {
-        if (book.id === id) {
-          book.rating = rating;
-        }
-        return book;
+      return produce(prevState, (draftState) => {
+        const index = draftState.findIndex((book) => book.id === id);
+        draftState[index].rating = rating;
       });
+      
+      // return produce(prevState, (draftState) => {
+      //   draftState.map((book) => {
+      //     if (book.id === id) {
+      //       book.rating = rating;
+      //     }
+      //     return book;
+      //   });
+      // });
+      
+      // return prevState.map((book) => {
+      //   if (book.id === id) {
+      //     book.rating = rating;
+      //   }
+      //   return book;
+      // });
     });
   }
   if (books.length === 0) {
